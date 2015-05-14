@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/classes-ad2f4fbc2ffbee3c7cace704b460d6a287bfb637.jar" />
+    </item>
+    <item
+        jar="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/libs/locSDK_5.1.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="a32e48b24fe3fe9fa8ae1cb8345b8db9a050df0f">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/locSDK_5.1-73714f17ef450f79f55409b0de013aa8e8a393b0.jar" />
+    </item>
+    <item
+        jar="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-6b5dd43e7b8f5e413d04855ef11924d5134778cc.jar" />
+    </item>
+    <item
+        jar="/Applications/adt-bundle-mac-x86_64-20140321/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-7e8f4032d78bf438eaadc79b9a554ae2c7cc5818.jar" />
+    </item>
+    <item
+        jar="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/exploded-aar/EasyWeather/ptr_library/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="cb4c1adc3c1acb9dc25f59a8e7b04d38e88884ae">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/classes-175456cdd97c2e91f2806646e8555d51825e5421.jar" />
+    </item>
+    <item
+        jar="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/classes-33eba993765102e3be09c4fdb0404e4e15a89299.jar" />
+    </item>
+    <item
+        jar="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/exploded-aar/EasyWeather/viewPagerIndicatorlib/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="dab28e72c4a71b525716a1c0d00dc352c79f4d87">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/classes-f36b101e7c85269fe25daebe7af939528f66f7ab.jar" />
+    </item>
+    <item
+        jar="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/exploded-aar/EasyWeather/viewPagerIndicatorlib/unspecified/libs/android-support-v13.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="41c6fb0537e463f685d3235fc50d38dc540d6ece">
+        <dex dex="/Users/Will/Documents/AndroidStudioProject/EasyWeather/app/build/intermediates/pre-dexed/debug/android-support-v13-9239f9ffeb84e43b6745bdd6cf123637f0337b18.jar" />
+    </item>
+
+</items>

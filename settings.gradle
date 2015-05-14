@@ -1,0 +1,3 @@
+include ':app'
+include ':ptr_library'
+include ':viewPagerIndicatorlib'
