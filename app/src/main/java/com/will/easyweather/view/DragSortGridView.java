@@ -42,7 +42,7 @@ public class DragSortGridView extends GridView {
 	 * order. So they need this callback.
 	 */
 	public interface OnReorderingListener {
-		void beginRecordering(AdapterView<?> parent, View view,
+		void beginReordering(AdapterView<?> parent, View view,
 									 int position, long id);
 
 		void onReordering(int fromPosition, int toPosition);
@@ -61,7 +61,7 @@ public class DragSortGridView extends GridView {
 				int position, long id) {
 			view.startDrag(null, new DragShadowBuilder(view), position, 0);
 			if (onReorderingListener != null)
-				onReorderingListener.beginRecordering(parent, view, position,
+				onReorderingListener.beginReordering(parent, view, position,
 						id);
 			return true;
 		}

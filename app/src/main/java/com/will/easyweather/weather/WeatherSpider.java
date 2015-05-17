@@ -25,10 +25,10 @@ import java.io.File;
 public class WeatherSpider {
 
 	private static final String WEATHER_ALL = "http://weatherapi.market.xiaomi.com/wtr-v2/weather?cityId=%s";
-	private static final int FORCAST_FROM_ALL = 0;
-	private static final int REALTIME_FROM_ALL = 1;
-	private static final int AQI_FROM_ALL = 2;
-	private static final int ALERT_FROM_ALL = 3;
+//	private static final int FORCAST_FROM_ALL = 0;
+//	private static final int REALTIME_FROM_ALL = 1;
+//	private static final int AQI_FROM_ALL = 2;
+//	private static final int ALERT_FROM_ALL = 3;
 
 	private static WeatherSpider mInstance = null;
 
@@ -41,48 +41,51 @@ public class WeatherSpider {
 		return mInstance;
 	}
 
-	private String generatePartWeatherInfo(String weatherResult, int type) {
-		switch (type) {
-		case FORCAST_FROM_ALL:
-			return weatherResult.replace("forecast", "weatherinfo");
-		case REALTIME_FROM_ALL:
-			return weatherResult.replace("realtime", "weatherinfo");
-		case AQI_FROM_ALL:
-			return weatherResult;
-		case ALERT_FROM_ALL:
-			return weatherResult.replace("alert", "weatherinfo");
-		default:
-			return null;
-		}
-
-	}
+//	private String generatePartWeatherInfo(String weatherResult, int type) {
+//		switch (type) {
+//		case FORCAST_FROM_ALL:
+//			return weatherResult.replace("forecast", "weatherinfo");
+//		case REALTIME_FROM_ALL:
+//			return weatherResult.replace("realtime", "weatherinfo");
+//		case AQI_FROM_ALL:
+//			return weatherResult;
+//		case ALERT_FROM_ALL:
+//			return weatherResult.replace("alert", "weatherinfo");
+//		default:
+//			return null;
+//		}
+//
+//	}
 
 	/**
 	 * 分段解析 json 数据为 bean 对象
 	 * @param context
 	 * @param postID
-	 * @param forecastInfo
-	 * @param realTimeInfo
-	 * @param aqiInfo
-	 * @param alertInfo
+	 * @param weatherResult
 	 * @return
 	 */
 	private WeatherInfo generateWeatherStruct(Context context, String postID,
-			String forecastInfo, String realTimeInfo, String aqiInfo,
-			String alertInfo) {
+			String weatherResult) {
 
 		String language = context.getResources().getConfiguration().locale
 				.toString();
 		Forecast forecast = WeatherController.convertToNewForecast(
-				forecastInfo, language, postID);
+				weatherResult, language, postID);
+
 		RealTime realTime = WeatherController.convertToNewRealTime(
-				realTimeInfo, language, postID);
-		Alerts alerts = WeatherController.convertToNewAlert(alertInfo, postID);
-		Index index = WeatherController.convertToNewIndex(forecastInfo,
-				language, postID);
-		AQI aqi = WeatherController.convertToNewAQI(aqiInfo, language, postID);
-		WeatherInfo weatherInfo = new WeatherInfo(realTime, forecast, aqi,
-				index, alerts);
+				weatherResult, language, postID);
+
+		Alerts alerts = WeatherController.convertToNewAlert(
+				weatherResult, postID);
+
+		Index index = WeatherController.convertToNewIndex(
+				weatherResult, language, postID);
+
+		AQI aqi = WeatherController.convertToNewAQI(
+				weatherResult, language, postID);
+
+		WeatherInfo weatherInfo = new WeatherInfo(
+				realTime, forecast, aqi, index, alerts);
 		return weatherInfo;
 	}
 
@@ -91,11 +94,12 @@ public class WeatherSpider {
 		isNewDatas = false;
 		String url = generateUrl(context, postID);
 		String weatherResult = getResult(context, url, forceRefresh);
-		WeatherInfo weatherInfo = generateWeatherStruct(context, postID,
-				generatePartWeatherInfo(weatherResult, FORCAST_FROM_ALL),
-				generatePartWeatherInfo(weatherResult, REALTIME_FROM_ALL),
-				generatePartWeatherInfo(weatherResult, AQI_FROM_ALL),
-				generatePartWeatherInfo(weatherResult, ALERT_FROM_ALL));
+//		WeatherInfo weatherInfo = generateWeatherStruct(context, postID,
+//				generatePartWeatherInfo(weatherResult, FORCAST_FROM_ALL),
+//				generatePartWeatherInfo(weatherResult, REALTIME_FROM_ALL),
+//				generatePartWeatherInfo(weatherResult, AQI_FROM_ALL),
+//				generatePartWeatherInfo(weatherResult, ALERT_FROM_ALL));
+		WeatherInfo weatherInfo=generateWeatherStruct(context, postID, weatherResult);
 		weatherInfo.setIsNewDatas(isNewDatas ? 1 : 0);
 		if (!isEmpty(weatherInfo))
 			ConfigCache.setUrlCache(context, weatherResult, url);// 信息不为空时保存到文件

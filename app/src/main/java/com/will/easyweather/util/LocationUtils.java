@@ -15,12 +15,12 @@ public class LocationUtils {
 	private LocationListener mListener;
 	private int mTryCount;
 
-	public static abstract interface LocationListener {
-		public abstract void detecting();
+	public interface LocationListener {
+		void detecting();
 
-		public abstract void succeed(String city);
+		void succeed(String city);
 
-		public abstract void failed();
+		void failed();
 	}
 
 	public LocationUtils(Context context, LocationListener listener) {

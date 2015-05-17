@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 	private static final String INSTANCESTATE_TAB = "tab_index";
 	private String mShareNormalStr = "#E天气#提醒您:今天%s,%s,%s,%s,";// 日期、城市、天气、温度
 	private String mAqiShareStr = "空气质量指数(AQI):%s μg/m³,等级[%s];PM2.5浓度值:%s μg/m³。%s ";// aqi、等级、pm2.5、建议
-	private String mShareEndStr = "（Github：https://github.com/4dcity/Will.EasyWeather）";
+	private String mShareEndStr = "（Github：https://github.com/4dcity/EWeather）";
 	private View mSplashView;
 	private static final int SHOW_TIME_MIN = 3000;// 最小显示时间
 	private long mStartTime;// 开始时间
@@ -79,13 +79,6 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 	private DrawerLayout mRootLayout;
 	private LinearLayout mDrawerLayout;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		initDatas();
-		initViews();
-	}
 
 	/**
 	 * 连续按两次返回键就退出
@@ -102,40 +95,21 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 		}
 	}
 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		initDatas();
+		initViews();
+	}
+
 	private void initDatas() {
 		mStartTime = System.currentTimeMillis();// 记录开始时间，
 		mHandler = new Handler();
-		// mTmpCities = getTmpCities();
 		// 第一次进来无定位城市
 		if (TextUtils.isEmpty(PreferenceUtils.getPrefString(this, AUTO_LOCATION_CITY_KEY, ""))) {
-
-			locate(new LocationUtils.LocationListener() {
-				@Override
-				public void detecting() {
-					// do nothing
-				}
-
-				@Override
-				public void succeed(String name) {
-					City city = getLocationCityFromDB(name);
-					if (TextUtils.isEmpty(city.getPostID())) {
-						T.showShort(MainActivity.this, R.string.no_this_city);
-					} else {
-						PreferenceUtils.setPrefString(MainActivity.this,
-								AUTO_LOCATION_CITY_KEY, name);
-						L.i("Will", "location" + city.toString());
-						updateLocationCity(city);
-						T.showShort(MainActivity.this, String.format(
-								getResources().getString(R.string.get_location_scuess), name));
-					}
-				}
-
-				@Override
-				public void failed() {
-					T.showShort(MainActivity.this, R.string.getlocation_fail);
-				}
-
-			});
+			//成功定位后把定位城市保存到 tmpcity 表
+			locate(new MainLocationListener());
 		}
 
 		mTmpCities = getTmpCities();
@@ -186,7 +160,9 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 			List<City> cities = params[0];
 			try {
 				for (City city : cities) {
+					//从网络 get 天气信息，并更新 tmpcity 表里的刷新时间
 					WeatherInfo info = getWeatherInfo(city.getPostID(), false);
+					//把从网络获取的天气信息保存在 app 的全局变量里
 					App.mMainMap.put(city.getPostID(), info);
 				}
 			} catch (Exception e) {
@@ -253,6 +229,7 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 		}
 		if (mAddCityBtn.getVisibility() == View.VISIBLE)
 			mAddCityBtn.setVisibility(View.GONE);
+		//超过一个城市，才显示 page indicator
 		if (mTmpCities.size() > 1)
 			mCirclePageIndicator.setVisibility(View.VISIBLE);
 		else
@@ -358,11 +335,12 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 					shareStr = String.format(shareStr, new Object[] { time,
 							name, weather, temp });
 				} else {
-					shareStr = String.format(shareStr, new Object[] { time,
-							name, weather, temp, info.getAqi().getAqi(),
+					shareStr = String.format(shareStr,
+							time, name, weather, temp,
+							info.getAqi().getAqi(),
 							info.getAqi().getAqi_level(),
 							info.getAqi().getPm25(),
-							info.getAqi().getAqi_desc() });
+							info.getAqi().getAqi_desc());
 				}
 
 				Intent intent = new Intent("android.intent.action.SEND");
@@ -405,37 +383,6 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 		else
 			mLocationIV.setVisibility(View.GONE);
 	}
-
-
-//	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-//	private void changeBlurImageViewAlpha(float slideOffset) {
-//		if(slideOffset <= 0){
-//			mBlurImageView.setImageBitmap(null);
-//			mBlurImageView.setVisibility(View.GONE);
-//			return;
-//		}
-//		if (mBlurImageView.getVisibility() != View.VISIBLE) {
-//			setBlurImage();
-//		}
-//		mBlurImageView.setAlpha(slideOffset);
-//	}
-
-//	private void setBlurImage() {
-//		mBlurImageView.setImageBitmap(null);
-//		mBlurImageView.setVisibility(View.VISIBLE);
-//		// do the downscaling for faster processing
-//		long beginBlur = System.currentTimeMillis();
-//		Bitmap downScaled = BitmapUtils.drawViewToBitmap(mMainView,
-//				mMainView.getWidth(), mMainView.getHeight(), 10);
-//		// apply the blur using the renderscript
-//		FrostedGlassUtil.getInstance().stackBlur(downScaled, 4);
-////		FrostedGlassUtil.getInstance().boxBlur(downScaled, 4);
-////		FrostedGlassUtil.getInstance().colorWaterPaint(downScaled, 4);
-////		FrostedGlassUtil.getInstance().oilPaint(downScaled, 4);
-//		long engBlur = System.currentTimeMillis();
-//		L.i("stackBlur cost " + (engBlur - beginBlur) + "ms");
-//		mBlurImageView.setImageBitmap(downScaled);
-//	}
 
 	private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
 		@Override
@@ -480,8 +427,8 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 		public void run() {
 			if (mSplashView.getVisibility() != View.VISIBLE)
 				return;
-			Animation anim = AnimationUtils.loadAnimation(MainActivity.this,
-					R.anim.push_right_out);
+			Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.push_right_out);
+
 			anim.setAnimationListener(new AnimationListener() {
 
 				@Override
@@ -512,6 +459,34 @@ public class MainActivity extends BaseActivity implements OnClickListener,
 			mSplashView.startAnimation(anim);
 		}
 	};
+
+	private class MainLocationListener implements LocationUtils.LocationListener {
+		@Override
+        public void detecting() {
+            // do nothing
+        }
+
+		@Override
+        public void succeed(String name) {
+            City city = getLocationCityFromDB(name);
+            if (TextUtils.isEmpty(city.getPostID())) {
+                T.showShort(MainActivity.this, R.string.no_this_city);
+            } else {
+                PreferenceUtils.setPrefString(MainActivity.this,
+						AUTO_LOCATION_CITY_KEY, name);
+                L.i("Will", "location" + city.toString());
+                updateLocationCity(city);
+                T.showShort(MainActivity.this, String.format(
+                        getResources().getString(R.string.get_location_scuess), name));
+            }
+        }
+
+		@Override
+        public void failed() {
+            T.showShort(MainActivity.this, R.string.getlocation_fail);
+        }
+
+	}
 
 //	OnClickListener showcaseOnClick = new OnClickListener() {
 //

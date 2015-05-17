@@ -79,6 +79,8 @@ public class QueryCityAdapter extends BaseAdapter implements Filterable {
 	@Override
 	public Filter getFilter() {
 		Filter filter = new Filter() {
+
+			@Override
 			protected void publishResults(CharSequence constraint,
 					FilterResults results) {
 				mResultCities = (ArrayList<City>) results.values;
@@ -89,6 +91,7 @@ public class QueryCityAdapter extends BaseAdapter implements Filterable {
 				}
 			}
 
+			@Override
 			protected FilterResults performFiltering(CharSequence s) {
 
 				FilterResults results = new FilterResults();
@@ -114,6 +117,7 @@ public class QueryCityAdapter extends BaseAdapter implements Filterable {
 				return results;
 			}
 		};
+
 		return filter;
 	}
 

@@ -129,13 +129,13 @@ public class TimeUtils {
 
 		long calDay = calHours / 24;
 		if (calDay < 31) {
-			if (isYesterDay(nowCalendar, msgCalendar)) {
+			if (isYestoday(nowCalendar, msgCalendar)) {
 				if (dayFormat == null)
 					dayFormat = new java.text.SimpleDateFormat("HH:mm");
 				String result = dayFormat.format(msgCalendar.getTime());
 				return new StringBuilder(res.getString(R.string.yesterday))
 						.append(" ").append(result).toString();
-			} else if (isTheDayBeforeYesterDay(nowCalendar, msgCalendar)) {
+			} else if (isTheDayBeforeYestoday(nowCalendar, msgCalendar)) {
 				if (dayFormat == null)
 					dayFormat = new java.text.SimpleDateFormat("HH:mm");
 				String result = dayFormat.format(msgCalendar.getTime());
@@ -190,14 +190,14 @@ public class TimeUtils {
 		return nowDay == msgDay;
 	}
 
-	private static boolean isYesterDay(Calendar now, Calendar msg) {
+	private static boolean isYestoday(Calendar now, Calendar msg) {
 		int nowDay = now.get(Calendar.DAY_OF_YEAR);
 		int msgDay = msg.get(Calendar.DAY_OF_YEAR);
 
 		return (nowDay - msgDay) == 1;
 	}
 
-	private static boolean isTheDayBeforeYesterDay(Calendar now, Calendar msg) {
+	private static boolean isTheDayBeforeYestoday(Calendar now, Calendar msg) {
 		int nowDay = now.get(Calendar.DAY_OF_YEAR);
 		int msgDay = msg.get(Calendar.DAY_OF_YEAR);
 

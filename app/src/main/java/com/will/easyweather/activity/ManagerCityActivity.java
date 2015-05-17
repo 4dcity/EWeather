@@ -138,6 +138,7 @@ public class ManagerCityActivity extends BaseActivity implements
 
 	}
 
+	//每次重新排序之后，更新adapter 和 tmpcity表里城市的顺序
 	private DragSortGridView.OnReorderingListener dragSortListener = new DragSortGridView.OnReorderingListener() {
 
 		@Override
@@ -160,23 +161,14 @@ public class ManagerCityActivity extends BaseActivity implements
 				mContentResolver.insert(CityProvider.TMPCITY_CONTENT_URI,
 						contentValues);
 			}
-
-			// 主键不允许修改，暂时保留。
-			// String fromPostID = mAdapter.getItem(fromPosition).getPostID();
-			// ContentValues idContentValues = new ContentValues();
-			// idContentValues.put(CityConstants.ID, toPosition);
-			// int result =
-			// mContentResolver.update(CityProvider.TMPCITY_CONTENT_URI,
-			// idContentValues, CityConstants.POST_ID + "=?",
-			// new String[] { fromPostID });//更新位置
-			// L.i("liweiping", "result = " + result);
 		}
 
 		@Override
-		public void beginRecordering(AdapterView<?> parent, View view,
+		public void beginReordering(AdapterView<?> parent, View view,
 				int position, long id) {
 			if (mAdapter.isEditMode)
 				return;
+			//长按可以直接进入 Reordering，这时候要更新 view 变成edit mode
 			changeEditMode();
 		}
 
@@ -199,6 +191,15 @@ public class ManagerCityActivity extends BaseActivity implements
 		updateBtnStates();
 	}
 
+	/**
+	 * 更新ActionBar按钮状态
+	 */
+	private void updateBtnStates() {
+		mEditCityBtn.setEnabled(mTmpCitys.size() > 1);
+		mRefreshCityBtn.setEnabled(mTmpCitys.size() > 1);
+		mRefreshProgressBar.setEnabled(mTmpCitys.size() > 1);
+	}
+
 	private void deleteCityFromTable(int position) {
 		City city = mAdapter.getItem(position);
 		// 从全局变量中删除
@@ -208,12 +209,6 @@ public class ManagerCityActivity extends BaseActivity implements
 				.delete(CityProvider.TMPCITY_CONTENT_URI, CityProvider.CityConstants.POST_ID
 						+ "=?", new String[] { city.getPostID() });
 
-		// 更新已选择的热门城市表
-		// ContentValues contentValues = new ContentValues();
-		// contentValues.put(CityConstants.ISSELECTED, 0);
-		// mContentResolver.update(CityProvider.HOTCITY_CONTENT_URI,
-		// contentValues, CityConstants.POST_ID + "=?",
-		// new String[] { city.getPostID() });
 		WeatherSpider.deleteCacheFile(this, city.getPostID());
 		updateUI(false);
 		if (mTmpCitys.isEmpty())// 如果全部被删除完了，更新一下编辑状态
@@ -251,14 +246,7 @@ public class ManagerCityActivity extends BaseActivity implements
 		updateBtnStates();
 	}
 
-	/**
-	 * 更新ActionBar按钮状态
-	 */
-	private void updateBtnStates() {
-		mEditCityBtn.setEnabled(mTmpCitys.size() > 1);
-		mRefreshCityBtn.setEnabled(mTmpCitys.size() > 1);
-		mRefreshProgressBar.setEnabled(mTmpCitys.size() > 1);
-	}
+
 
 	private class CityGridAdapter extends BaseAdapter {
 		public static final int NORMAL_CITY_TYPE = 0;

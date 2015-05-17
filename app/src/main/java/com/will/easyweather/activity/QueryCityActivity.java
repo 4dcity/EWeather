@@ -49,7 +49,6 @@ public class QueryCityActivity extends BaseActivity implements OnClickListener,
 	private EditText mQueryCityET;
 	private ImageButton mQueryCityExitBtn;
 	private ListView mQueryCityListView;
-	// private TextView mEmptyCityView;
 	private GridView mHotCityGridView;
 	private List<City> mTmpCitys;
 	private List<City> mHotCitys;
@@ -214,6 +213,27 @@ public class QueryCityActivity extends BaseActivity implements OnClickListener,
 		return mQueryCityET.getText().length() > 0;
 	}
 
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		doBeforeTextChanged();
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		if (TextUtils.isEmpty(s)) {
+			mQueryCityExitBtn.setVisibility(View.GONE);
+		} else {
+			mQueryCityExitBtn.setVisibility(View.VISIBLE);
+		}
+		doAfterTextChanged();
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		// do nothing
+	}
+
 	private void doBeforeTextChanged() {
 		if (mQueryCityListView.getVisibility() == View.GONE) {
 			mQueryCityListView.setVisibility(View.VISIBLE);
@@ -238,27 +258,6 @@ public class QueryCityActivity extends BaseActivity implements OnClickListener,
 
 	}
 
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-		doBeforeTextChanged();
-	}
-
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		if (TextUtils.isEmpty(s)) {
-			mQueryCityExitBtn.setVisibility(View.GONE);
-		} else {
-			mQueryCityExitBtn.setVisibility(View.VISIBLE);
-		}
-		doAfterTextChanged();
-	}
-
-	@Override
-	public void afterTextChanged(Editable s) {
-		// do nothing
-	}
-
 	CountDownView.OnCountDownFinishedListener countDownFinishedListener = new CountDownView.OnCountDownFinishedListener() {
 
 		@Override
@@ -269,45 +268,7 @@ public class QueryCityActivity extends BaseActivity implements OnClickListener,
 		}
 	};
 
-	LocationUtils.LocationListener mCityNameStatus = new LocationUtils.LocationListener() {
-
-		@Override
-		public void detecting() {
-			L.i("Will", "detecting...");
-			showCountDownView();
-		}
-
-		@Override
-		public void succeed(String name) {
-			// TODO Auto-generated method stub
-			L.i("Will", name);
-			dismissCountDownView();
-
-			City city = getLocationCityFromDB(name);
-			if (TextUtils.isEmpty(city.getPostID())) {
-				Toast.makeText(QueryCityActivity.this, R.string.no_this_city,
-						Toast.LENGTH_SHORT).show();
-			} else {
-				PreferenceUtils.setPrefString(QueryCityActivity.this,
-						AUTO_LOCATION_CITY_KEY, name);
-				L.i("Will", "location" + city.toString());
-				updateLocationCity(city);
-				T.showShort(
-						QueryCityActivity.this,
-						String.format(
-								getResources().getString(
-										R.string.get_location_scuess), name));
-				mLocationTV.setText(name);
-			}
-		}
-
-		@Override
-		public void failed() {
-			Toast.makeText(QueryCityActivity.this, R.string.getlocation_fail,
-					Toast.LENGTH_SHORT).show();
-		}
-
-	};
+	LocationUtils.LocationListener mCityNameStatus = new QueryLocationListener();
 
 	private void showCountDownView() {
 		mInflater.inflate(R.layout.count_down_to_location, mRootView, true);
@@ -359,6 +320,7 @@ public class QueryCityActivity extends BaseActivity implements OnClickListener,
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 			viewHolder.hotCityTV.setText(hotCity.getName());
+			//如果该 hotcity 在 tmpcity 表里，那么显示被选中的的image
 			if (mTmpCitys.contains(hotCity)) {
 				viewHolder.selectedIV.setVisibility(View.VISIBLE);
 			} else {
@@ -375,4 +337,43 @@ public class QueryCityActivity extends BaseActivity implements OnClickListener,
 		ImageView selectedIV;
 	}
 
+	private class QueryLocationListener implements LocationUtils.LocationListener {
+
+		@Override
+		public void detecting() {
+			L.i("Will", "detecting...");
+			showCountDownView();
+		}
+
+		@Override
+		public void succeed(String name) {
+			// TODO Auto-generated method stub
+			L.i("Will", name);
+			dismissCountDownView();
+
+			City city = getLocationCityFromDB(name);
+			if (TextUtils.isEmpty(city.getPostID())) {
+				Toast.makeText(QueryCityActivity.this, R.string.no_this_city,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				PreferenceUtils.setPrefString(QueryCityActivity.this,
+						AUTO_LOCATION_CITY_KEY, name);
+				L.i("Will", "location" + city.toString());
+				updateLocationCity(city);
+				T.showShort(
+						QueryCityActivity.this,
+						String.format(
+								getResources().getString(
+										R.string.get_location_scuess), name));
+				mLocationTV.setText(name);
+			}
+		}
+
+		@Override
+		public void failed() {
+			Toast.makeText(QueryCityActivity.this, R.string.getlocation_fail,
+					Toast.LENGTH_SHORT).show();
+		}
+
+	}
 }

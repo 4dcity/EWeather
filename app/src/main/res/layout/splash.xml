@@ -51,6 +51,7 @@
                 android:gravity="bottom"
                 android:paddingBottom="6dip"
                 android:text="@string/app_version"
+                android:textColor="@android:color/white"
                 android:layout_gravity="center_horizontal"
                 android:textSize="14sp" />
 

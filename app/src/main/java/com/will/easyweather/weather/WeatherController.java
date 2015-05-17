@@ -54,7 +54,7 @@ public class WeatherController {
 			ArrayList<Alerts.Alert> alertLists = new ArrayList<Alerts.Alert>();
 			Alerts alerts = new Alerts();
 			JSONArray alertJSONArray = new JSONObject(alertInfo)
-					.getJSONArray("weatherinfo");
+					.getJSONArray("alert");
 			for (int i = 0; i < alertJSONArray.length(); ++i) {
 				JSONObject jsonObject = alertJSONArray.getJSONObject(i);
 				Alerts.Alert alert = new Alerts.Alert();
@@ -80,39 +80,39 @@ public class WeatherController {
 		try {
 			Forecast forecast = new Forecast();
 
-			JSONObject forecastJSONObject = new JSONObject(forecastInfo);
-			JSONObject forcastJSONObject = forecastJSONObject
-					.getJSONObject("weatherinfo");
+			JSONObject mJSONObject = new JSONObject(forecastInfo);
+			JSONObject forecastJSONObject = mJSONObject
+					.getJSONObject("forecast");
 
-			JSONObject todayJSONObject = forecastJSONObject
+			JSONObject todayJSONObject = mJSONObject
 					.getJSONObject("today");
-			JSONObject yestodayJSONObject = forecastJSONObject
+			JSONObject yestodayJSONObject = mJSONObject
 					.getJSONObject("yestoday");
 
 			forecast.setPid(pid);
 			forecast.setWinds(0, "");
 			forecast.setWinds(1, WeatherUtils.getWind(
-					forcastJSONObject.getString("fx1"),
-					forcastJSONObject.getString("fl1"), language));
+					forecastJSONObject.getString("fx1"),
+					forecastJSONObject.getString("fl1"), language));
 			forecast.setWinds(2, WeatherUtils.getWind(
-					forcastJSONObject.getString("fx2"),
-					forcastJSONObject.getString("fl2"), language));
+					forecastJSONObject.getString("fx2"),
+					forecastJSONObject.getString("fl2"), language));
 			forecast.setWinds(3, WeatherUtils.getWind(
-					forcastJSONObject.getString("fx2"),
-					forcastJSONObject.getString("fl3"), language));
+					forecastJSONObject.getString("fx2"),
+					forecastJSONObject.getString("fl3"), language));
 			forecast.setWinds(4, WeatherUtils.getWind(
-					forcastJSONObject.getString("fx2"),
-					forcastJSONObject.getString("fl4"), language));
+					forecastJSONObject.getString("fx2"),
+					forecastJSONObject.getString("fl4"), language));
 			forecast.setWinds(5, WeatherUtils.getWind(
-					forcastJSONObject.getString("fx2"),
-					forcastJSONObject.getString("fl5"), language));
+					forecastJSONObject.getString("fx2"),
+					forecastJSONObject.getString("fl5"), language));
 			for (int i = 0; i < 6; ++i)
 				forecast.setHumiditys(i,
 						WeatherConstants.NO_VALUE_FLAG.intValue());
 			WeatherUtils.WeatherName[] weatherName = new WeatherUtils.WeatherName[5];
 			for (int i = 0; i < 5; ++i)
 				weatherName[i] = WeatherUtils.getWeatherName(
-						forcastJSONObject.getString("weather" + (i + 1)),
+						forecastJSONObject.getString("weather" + (i + 1)),
 						language);
 			forecast.setWeatherNames(0, "");
 			for (int i = 0; i < 5; ++i)
@@ -125,16 +125,16 @@ public class WeatherController {
 					yestodayJSONObject.getString("weatherEnd"));
 			for (int i = 0; i < 5; ++i)
 				forecast.setWeatherNamesTo(i + 1, weatherName[i].getTo());
-			long forcastTime = getForcastTime(forcastJSONObject
+			long forcastTime = getForecastTime(forecastJSONObject
 					.getString("date_y")
 					+ " "
-					+ forcastJSONObject.getString("fchh"));
+					+ forecastJSONObject.getString("fchh"));
 			forecast.setPubtime(forcastTime);
 			long yestodayTime = Tools.getStartMillsInOneDay(Calendar
 					.getInstance());// 待检测
 			int[] forecastTemps = new int[12];
 			for (int i = 0; i < 5; ++i) {
-				String[] temps = forcastJSONObject.getString("temp" + (i + 1))
+				String[] temps = forecastJSONObject.getString("temp" + (i + 1))
 						.split("~");
 				String[] minTemp = temps[0].split("℃");
 				String[] maxTemp = temps[1].split("℃");
@@ -180,7 +180,7 @@ public class WeatherController {
 			index.setCity_code(pid);
 
 			JSONObject indexJSONObject = new JSONObject(indexInfo)
-					.getJSONObject("weatherinfo");
+					.getJSONObject("forecast");
 			// Log.i("way", indexJSONObject.toString());
 			ArrayList<IndexDetail> indexDetailLists = new ArrayList<IndexDetail>();
 			IndexDetail windIndexDetail = new IndexDetail();
@@ -225,7 +225,7 @@ public class WeatherController {
 		try {
 			RealTime realTime = new RealTime();
 			JSONObject realTimeJSONObject = new JSONObject(realTimeInfo)
-					.getJSONObject("weatherinfo");
+					.getJSONObject("realtime");
 			realTime.setCity_code(pid);
 			realTime.setPub_time(parseTime(realTimeJSONObject.getString("time")));
 			realTime.setTemp(WeatherUtils.getIntFromJSON(
@@ -261,15 +261,15 @@ public class WeatherController {
 		return aqiTime;
 	}
 
-	private static long getForcastTime(String timeStr) {
-		long forcastTime = -7754570281926000640L;
+	private static long getForecastTime(String timeStr) {
+		long forecastTime = -7754570281926000640L;
 		try {
-			forcastTime = new SimpleDateFormat("yyyy年M月d日 HH").parse(timeStr)
+			forecastTime = new SimpleDateFormat("yyyy年M月d日 HH").parse(timeStr)
 					.getTime();
 
 		} catch (Exception e) {
 		}
-		return forcastTime;
+		return forecastTime;
 	}
 
 	private static long parseTime(String timeStr) {

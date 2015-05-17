@@ -164,6 +164,7 @@ public class WeatherFragment extends Fragment implements OnRefreshListener,
 		mCurFeelsTempTV = (TextView) view.findViewById(R.id.temperature);
 		mCurWeatherCopyTV = (TextView) view.findViewById(R.id.copyright);
 
+		//这里取出城市的详细预报信息，然后绑定UI
 		updateWeatherView(App.mMainMap.get(mCurCity.getPostID()), false);
 	}
 

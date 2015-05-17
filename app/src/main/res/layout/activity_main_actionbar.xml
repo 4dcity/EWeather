@@ -17,8 +17,8 @@
             android:minHeight="@dimen/topbar_icon_size"
             android:minWidth="@dimen/topbar_icon_size"
             android:padding="12dip"
-            android:src="@drawable/topbar_icon_side_selector" />
-            android:scaleType="centerCrop"
+            android:src="@drawable/topbar_icon_side_selector"
+            android:scaleType="centerCrop"/>
 
         <ImageView
             android:id="@+id/shareButton"
@@ -30,8 +30,8 @@
             android:minHeight="@dimen/topbar_icon_size"
             android:minWidth="@dimen/topbar_icon_size"
             android:padding="12dip"
-            android:src="@drawable/topbar_icon_share_selector" />
-            android:scaleType="centerCrop"
+            android:src="@drawable/topbar_icon_share_selector"
+            android:scaleType="centerCrop"/>
 
         <com.will.easyweather.view.WeatherTypefacedTextView
             android:id="@+id/location_city_textview"
